@@ -99,6 +99,8 @@ class Banner(models.Model):
 
     places = models.ManyToManyField(Place, verbose_name=_('Place'), related_name="banners", db_index=True)
 
+    keywords = models.TextField(verbose_name=_('Keywords'), help_text=_('Comma-separated list of keywords. If the search matches any of these keywords the probability of the ad being shown is 2 times higher per keyword.'), blank=True, default='')
+
     objects = BannerManager()
 
     class Meta:
@@ -145,6 +147,18 @@ class Banner(models.Model):
             return '%s / %s' % (self.views, self.max_views)
         return '%s' % self.views
     admin_views_str.short_description = _('Views')
+
+    @property
+    def keys(self):
+        return map(lambda s: s.strip().lower(), self.keywords.split(','))
+
+    def words_weight(self, words):
+        weight = self.weight
+        keys = self.keys
+        for word in words:
+            if work in keys:
+                weight *= 2
+        return words_weight
 
 
 class Click(models.Model):

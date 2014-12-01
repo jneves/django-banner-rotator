@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 
 import logging
+import re
 
 from django import template
 from django.template.loader import render_to_string
@@ -47,11 +48,12 @@ class BannerNode(template.Node):
             })
 
 
-@register.tag
-def banner(parser, token):
+@register.simple_tag(takes_context=True)
+def banner(context, parser, token):
     """
     Use: {% banner place-slug as banner %} or {% banner place-slug %}
     """
+    request = context['request']
     bits = token.contents.split()
 
     if len(bits) not in [2, 4]:
@@ -64,4 +66,6 @@ def banner(parser, token):
         place_slug = bits[1]
         varname = None
 
-    return BannerNode(place_slug, varname)
+    words = map(lambda s: s.lower().strip(), re.split('\W+', request.META['QUERY_STRING']))
+
+    return BannerNode(place_slug, varname, query=words)

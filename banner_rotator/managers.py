@@ -31,11 +31,15 @@ def pick(bias_list):
 
 class BannerManager(models.Manager):
 
-    def biased_choice(self, place):
+    def biased_choice(self, place, search=''):
         queryset = self.filter(is_active=True, places=place)
 
         if not queryset.count():
             raise self.model.DoesNotExist
 
-        normalizer = queryset.aggregate(normalizer=models.Sum('weight'))['normalizer']
+        search_words = map(lambda s: s.strip().lower(), search.split(','))
+
+        normalizer = 0
+        for banner in queryset:
+            normalizer += banner.words_weight(search_words)
         return pick([(i, i.weight / float(normalizer)) for i in queryset])
