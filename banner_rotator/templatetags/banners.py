@@ -48,7 +48,7 @@ class BannerNode(template.Node):
             })
 
 
-@register.simple_tag(takes_context=True)
+@register.tag(takes_context=True)
 def banner(context, parser, token):
     """
     Use: {% banner place-slug as banner %} or {% banner place-slug %}
