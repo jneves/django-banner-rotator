@@ -16,8 +16,8 @@ register = template.Library()
 
 
 class BannerNode(template.Node):
-    def __init__(self, place_slug, varname=None):
-        self.varname, self.place_slug = varname, place_slug
+    def __init__(self, place_slug, varname=None, query=''):
+        self.varname, self.place_slug, self.query = varname, place_slug, query
 
     def render(self, context):
         try:
@@ -26,7 +26,7 @@ class BannerNode(template.Node):
             return ''
 
         try:
-            banner_obj = Banner.objects.biased_choice(self.place)
+            banner_obj = Banner.objects.biased_choice(self.place, self.query)
             banner_obj.view()
         except Banner.DoesNotExist:
             banner_obj = None
