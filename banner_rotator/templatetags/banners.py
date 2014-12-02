@@ -48,22 +48,19 @@ class BannerNode(template.Node):
             })
 
 
-@register.tag(takes_context=True)
-def banner(context, parser, token):
+@register.simple_tag(takes_context=True)
+def banner(context, place_slug, *args):
     """
     Use: {% banner place-slug as banner %} or {% banner place-slug %}
     """
     request = context['request']
-    bits = token.contents.split()
 
-    if len(bits) not in [2, 4]:
+    if len(args) not in [0, 2]:
         raise template.TemplateSyntaxError(_("banner tag takes three of four arguments"))
 
-    if 4 == len(bits) and 'as' == bits[2]:
-        place_slug = bits[1]
-        varname = bits[3]
+    if 2 == len(args) and 'as' == args[0]:
+        varname = args[1]
     else:
-        place_slug = bits[1]
         varname = None
 
     words = map(lambda s: s.lower().strip(), re.split('\W+', request.META['QUERY_STRING']))
