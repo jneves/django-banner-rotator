@@ -156,9 +156,9 @@ class Banner(models.Model):
         weight = self.weight
         keys = self.keys
         for word in words:
-            if work in keys:
+            if word in keys:
                 weight *= 2
-        return words_weight
+        return weight
 
 
 class Click(models.Model):
