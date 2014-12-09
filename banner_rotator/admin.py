@@ -23,7 +23,7 @@ class CampaignBannerInline(admin.StackedInline):
     model = Banner
     extra = 0
     readonly_fields = ['views']
-    fields = ['is_active', 'places', 'name', 'url', 'file', 'weight', 'views']
+    fields = ['is_active', 'places', 'name', 'url', 'file', 'weight', 'keywords', 'views']
     formfield_overrides = {
         models.ManyToManyField: {'widget': forms.CheckboxSelectMultiple},
     }
@@ -36,7 +36,7 @@ class CampaignAdmin(admin.ModelAdmin):
 
 
 class BannerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'campaign', 'weight', 'url', 'views', 'is_active')
+    list_display = ('name', 'campaign', 'weight', 'keywords', 'url', 'views', 'is_active')
     list_filter = ('campaign', 'places', 'is_active')
     date_hierarchy = 'created_at'
     fieldsets = (
